@@ -2,7 +2,7 @@ package main
 
 import "testing"
 
-func toAddress(addr Addr) string {
+func toAddress(addr *Addr) string {
 	return addr.network + "://" + addr.address
 }
 
@@ -44,11 +44,12 @@ func TestParseAddressPositive(t *testing.T) {
 	for _, tt := range testsPositive {
 		t.Run(tt.address, func(t *testing.T) {
 			addr, err := parseAddress(tt.address)
-
-			got := toAddress(addr)
 			if err != nil {
 				t.Errorf("want: 'no err', got err: '%v'", err)
-			} else if tt.want != got {
+			}
+
+			got := toAddress(addr)
+			if tt.want != got {
 				t.Errorf("want: '%s', got: '%s'", tt.want, got)
 			}
 		})

@@ -20,8 +20,8 @@ func (addr Addr) String() string {
 }
 
 type Config struct {
-	listen Addr
-	target Addr
+	listen *Addr
+	target *Addr
 }
 
 func main() {
@@ -69,30 +69,30 @@ func parseConfig() (*Config, error) {
 	return cfg, nil
 }
 
-func parseAddress(address string) (Addr, error) {
+func parseAddress(address string) (*Addr, error) {
 	address = strings.Trim(address, " ")
 	if address == "" {
-		return Addr{"", ""}, errors.New("address cannot be empty")
+		return nil, errors.New("address cannot be empty")
 	}
 
 	if strings.HasPrefix(address, ":") && !strings.HasPrefix(address, "://") {
-		return Addr{"tcp", "localhost" + address}, nil
+		return &Addr{"tcp", "localhost" + address}, nil
 	}
 
 	addrParts := strings.Split(address, "://")
 	if len(addrParts) > 2 {
-		return Addr{"", ""}, errors.New("the address cannot contain more than one '://'")
+		return nil, errors.New("the address cannot contain more than one '://'")
 	}
 
 	if len(addrParts) == 1 {
-		return Addr{"tcp", addrParts[0]}, nil
+		return &Addr{"tcp", addrParts[0]}, nil
 	}
 
 	if addrParts[0] == "" {
-		return Addr{"", ""}, errors.New("network not specified")
+		return nil, errors.New("network not specified")
 	}
 
-	return Addr{addrParts[0], addrParts[1]}, nil
+	return &Addr{addrParts[0], addrParts[1]}, nil
 }
 
 func (c *Config) testTarget() error {
