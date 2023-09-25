@@ -2,10 +2,6 @@ package main
 
 import "testing"
 
-func toAddress(addr *Addr) string {
-	return addr.network + "://" + addr.address
-}
-
 func TestParseAddressPositive(t *testing.T) {
 	testsPositive := []struct {
 		address string
@@ -48,7 +44,7 @@ func TestParseAddressPositive(t *testing.T) {
 				t.Errorf("want: 'no err', got err: '%v'", err)
 			}
 
-			got := toAddress(addr)
+			got := addr.String()
 			if tt.want != got {
 				t.Errorf("want: '%s', got: '%s'", tt.want, got)
 			}
@@ -80,7 +76,7 @@ func TestParseAddressNegative(t *testing.T) {
 			addr, err := parseAddress(tt.address)
 
 			if err == nil {
-				got := toAddress(addr)
+				got := addr.String()
 				t.Errorf("want: 'err', got: '%s'", got)
 			} else if tt.want != err.Error() {
 				t.Errorf("want: '%s', got: '%s'", tt.want, err.Error())
